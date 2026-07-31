@@ -1,0 +1,9 @@
+# build artifacts
+labsentry
+*.o
+# vendored upstream amalgamation zip (kept locally, not committed)
+vendor/sqlite-amalgamation.zip
+# test scratch
+audit.db
+report.json
+*.db
