@@ -7,9 +7,15 @@ BIN      = labsentry
 # SQLite needs threads + dl for static link
 SQLITE_DEFINES = -DSQLITE_THREADSAFE=1 -DSQLITE_OMIT_LOAD_EXTENSION=1
 
-.PHONY: all clean test
+.PHONY: all clean test install
 
 all: $(BIN)
+
+install: $(BIN)
+	install -d $(DESTDIR)$(PREFIX)/bin
+	install -m 0755 $(BIN) $(DESTDIR)$(PREFIX)/bin/
+	install -d $(DESTDIR)$(PREFIX)/share/labsentry/tools
+	install -m 0644 tools/report.py $(DESTDIR)$(PREFIX)/share/labsentry/tools/
 
 vendor/sqlite3.o: vendor/sqlite3.c
 	$(CC) $(CFLAGS) $(SQLITE_DEFINES) -c $< -o $@
@@ -34,3 +40,4 @@ test: $(BIN)
 	@echo "hello model" > /tmp/ls-test/model.gguf
 	./$(BIN) scan --roots /tmp/ls-test --db /tmp/ls-test/audit.db --json /tmp/ls-test/r.json
 	./$(BIN) img --in /tmp/ls-test --out /tmp/ls-test/out || true
+	PREFIX=/tmp/ls-test ./$(BIN) report --json /tmp/ls-test/r.json | head -5

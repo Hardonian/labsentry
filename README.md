@@ -52,6 +52,17 @@ Free OSS binary builds audience in self-host / LocalLLaMA circles. Paid layer:
 productized "Lab Doctor" audit + hosted report + consultancy. Low maintenance,
 inbound.
 
+## Install
+
+Prebuilt static binary (zero-dep, ~2.3 MB) — works on any x86_64 Linux:
+
+    curl -fsSL https://raw.githubusercontent.com/Hardonian/labsentry/main/install.sh | sh
+
+Or build from source (needs only gcc + make):
+
+    git clone https://github.com/Hardonian/labsentry
+    cd labsentry && make && sudo make install
+
 ## License
 
 MIT (SQLite is public domain; sha256 is public domain).

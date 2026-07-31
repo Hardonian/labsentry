@@ -415,5 +415,25 @@ int main(int argc,char **argv){
         printf("image hygiene: %s -> %s\n",indir,outdir);
         img_run(indir,outdir); return 0;
     }
+    if(!strcmp(cmd,"report")){
+        const char *jsonp=NULL;
+        for(int i=2;i<argc;i++){ if(!strcmp(argv[i],"--json")&&i+1<argc) jsonp=argv[++i]; }
+        if(!jsonp){ fprintf(stderr,"report: --json <audit.json> required\n"); return 2; }
+        char self[1024]; ssize_t n=readlink("/proc/self/exe",self,sizeof self-1); self[n<0?0:n]=0;
+        char dir[1024]; strcpy(dir, self); char *sl=strrchr(dir,'/'); if(sl) *sl=0;
+        /* search candidate locations for report.py */
+        const char *cands[5];
+        char c0[2048], c1[2048], c2[2048], c3[2048];
+        snprintf(c0,sizeof c0,"%s/tools/report.py",dir);
+        snprintf(c1,sizeof c1,"%s/../share/labsentry/tools/report.py",dir);
+        snprintf(c2,sizeof c2,"/usr/local/share/labsentry/tools/report.py");
+        snprintf(c3,sizeof c3,"/usr/share/labsentry/tools/report.py");
+        cands[0]=c0; cands[1]=c1; cands[2]=c2; cands[3]=c3; cands[4]=NULL;
+        const char *py=NULL;
+        for(int k=0;cands[k];k++){ if(access(cands[k],R_OK)==0){ py=cands[k]; break; } }
+        if(!py){ fprintf(stderr,"report: tools/report.py not found (install labsentry properly)\n"); return 1; }
+        char cmd[3072]; snprintf(cmd,sizeof cmd,"python3 %s %s",py,jsonp);
+        return system(cmd);
+    }
     usage(); return 2;
 }

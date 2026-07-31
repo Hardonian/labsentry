@@ -7,8 +7,8 @@ set -euo pipefail
 NAME=labsentry
 PREFIX="${PREFIX:-/usr/local}"
 BIN_DIR="$PREFIX/bin"
-REPO="${REPO:-https://github.com/sovereign-ai-lab/labsentry}"
-RELEASE_BASE="${RELEASE_BASE:-}"   # e.g. https://github.com/sovereign-ai-lab/labsentry/releases/latest/download
+REPO="${REPO:-https://github.com/Hardonian/labsentry}"
+RELEASE_BASE="${RELEASE_BASE:-https://github.com/Hardonian/labsentry/releases/download/v0.1.0}"
 
 # resolve script dir so we always build from the right place
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -25,10 +25,11 @@ if [ -f Makefile ] && command -v make >/dev/null 2>&1; then
   make >/dev/null
   SRC_BIN="./$NAME"
 elif [ -n "$RELEASE_BASE" ]; then
-  url="$RELEASE_BASE/$NAME-$OS-$ARCH-static"
+  OS_LC=$(echo "$OS" | tr "[:upper:]" "[:lower:]"); url="$RELEASE_BASE/$NAME-$OS_LC-$ARCH-static"
   say "downloading prebuilt $url"
   tmp=$(mktemp)
   curl -fsSL "$url" -o "$tmp" || { echo "download failed"; exit 1; }
+  chmod +x "$tmp"
   SRC_BIN="$tmp"
 else
   say "no Makefile here; cloning $REPO"
