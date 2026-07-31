@@ -8,7 +8,7 @@ NAME=labsentry
 PREFIX="${PREFIX:-/usr/local}"
 BIN_DIR="$PREFIX/bin"
 REPO="${REPO:-https://github.com/Hardonian/labsentry}"
-RELEASE_BASE="${RELEASE_BASE:-https://github.com/Hardonian/labsentry/releases/download/v0.1.0}"
+RELEASE_BASE="${RELEASE_BASE:-https://github.com/Hardonian/labsentry/releases/download/v0.1.1}"
 
 # resolve script dir so we always build from the right place
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -31,6 +31,14 @@ elif [ -n "$RELEASE_BASE" ]; then
   curl -fsSL "$url" -o "$tmp" || { echo "download failed"; exit 1; }
   chmod +x "$tmp"
   SRC_BIN="$tmp"
+  # fetch report.py (Lab Doctor engine) so `labsentry report` works standalone
+  rurl="$RELEASE_BASE/report.py"
+  rtmp=$(mktemp)
+  if curl -fsSL "$rurl" -o "$rtmp" 2>/dev/null; then
+    install -d "$BIN_DIR/../share/labsentry/tools"
+    install -m 0644 "$rtmp" "$BIN_DIR/../share/labsentry/tools/report.py"
+    say "installed tools/report.py"
+  fi
 else
   say "no Makefile here; cloning $REPO"
   tmpd=$(mktemp -d)
