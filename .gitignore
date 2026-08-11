@@ -7,3 +7,12 @@ vendor/sqlite-amalgamation.zip
 audit.db
 report.json
 *.db
+__pycache__/
+.env
+node_modules/
+build/
+.pytest_cache/
+.idea/
+.vscode/
+*.pyc
+*.log
