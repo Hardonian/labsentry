@@ -1,5 +1,9 @@
 # labsentry
 
+<!-- BEGIN: REPO HERO -->
+![labsentry — hero generated locally on the GPU stack](assets/repo-hero.png)
+<!-- END: REPO HERO -->
+
 Pure-C, zero-dependency sovereign AI-lab auditor + image pipeline.
 
 Single static binary. Drop it on any node (x86_64 Linux, incl. Radxa edge
